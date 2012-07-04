@@ -62,6 +62,8 @@ void Adafruit_CharacterOLED::begin(uint8_t cols, uint8_t lines)
 {
   _numlines = lines;
   _currline = 0;
+  _displaycontrol = 0;
+  _displaymode = 0;
   
   pinMode(_rs_pin, OUTPUT);
   pinMode(_rw_pin, OUTPUT);
@@ -98,16 +100,11 @@ void Adafruit_CharacterOLED::begin(uint8_t cols, uint8_t lines)
    
   delayMicroseconds(5000);
   
-  command(0x08);	// Turn Off
-  delayMicroseconds(5000);
-  command(0x01);	// Clear Display
-  delayMicroseconds(5000);
-  command(0x06);	// Set Entry Mode
-  delayMicroseconds(5000);
-  command(0x02);	// Home Cursor
-  delayMicroseconds(5000);
-  command(0x0C);	// Turn On - enable cursor & blink
-  delayMicroseconds(5000);
+  noDisplay();   // Turn Off
+  clear();       // Clear Display
+  leftToRight(); // Set Entry Mode
+  home();        // Home Cursor
+  display();     // Turn On
 }
 
 /********** high level commands, for the user! */
