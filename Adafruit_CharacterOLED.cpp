@@ -2,6 +2,7 @@
 // With portions adapted from Elco Jacobs OLEDFourBit
 // Modified for 4-bit operation of the Winstar 16x2 Character OLED
 // By W. Earl for Adafruit - 6/30/12
+// Initialization sequence fixed by Technobly - 9/22/2013
 
 #include "Adafruit_CharacterOLED.h"
 
@@ -81,21 +82,23 @@ void Adafruit_CharacterOLED::begin(uint8_t cols, uint8_t lines)
   }
 
   // Initialization sequence is not quite as documented by Winstar.
-  // Documented sequence only works on initial power-up.  An additional
-  // step is required to handle a warm-restart.
+  // Documented sequence only works on initial power-up.  
+  // An additional step of putting back into 8-bit mode first is 
+  // required to handle a warm-restart.
   //
   // In the data sheet, the timing specs are all zeros(!).  These have been tested to 
-  // reliably handle both warm & cold starts
-  //
+  // reliably handle both warm & cold starts.
 
-  write4bits(0x03);  // Missing step from doc. Thanks to Elco Jacobs
+  // 4-Bit initialization sequence from Technobly
+  write4bits(0x03); // Put back in 8-bit mode
   delayMicroseconds(5000);
-  write4bits(0x02);
+  write4bits(0x08);
+  delayMicroseconds(5000);
+  write4bits(0x02); // Put into 4-bit mode
   delayMicroseconds(5000);
   write4bits(0x02);
   delayMicroseconds(5000);
   write4bits(0x08);
-   
   delayMicroseconds(5000);
   
   command(0x08);	// Turn Off
