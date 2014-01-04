@@ -32,15 +32,19 @@
 // can't assume that its in that state when a sketch starts (and the
 // LiquidCrystal constructor is called).
 
-Adafruit_CharacterOLED::Adafruit_CharacterOLED(uint8_t rs, uint8_t rw, uint8_t enable,
+Adafruit_CharacterOLED::Adafruit_CharacterOLED(uint8_t ver, uint8_t rs, uint8_t rw, uint8_t enable,
 			     uint8_t d4, uint8_t d5, uint8_t d6, uint8_t d7)
 {
-  init(rs, rw, enable, d4, d5, d6, d7);
+  init(ver, rs, rw, enable, d4, d5, d6, d7);
 }
 
-void Adafruit_CharacterOLED::init(uint8_t rs, uint8_t rw, uint8_t enable,
+void Adafruit_CharacterOLED::init(uint8_t ver, uint8_t rs, uint8_t rw, uint8_t enable,
 			 uint8_t d4, uint8_t d5, uint8_t d6, uint8_t d7)
 {
+  _oled_ver = ver;
+  if(_oled_ver != OLED_V1 && _oled_ver != OLED_V2) {
+    _oled_ver = OLED_V2; // if error, default to newer version
+  }
   _rs_pin = rs;
   _rw_pin = rw;
   _enable_pin = enable;
@@ -90,10 +94,12 @@ void Adafruit_CharacterOLED::begin(uint8_t cols, uint8_t lines)
   // reliably handle both warm & cold starts.
 
   // 4-Bit initialization sequence from Technobly
-  write4bits(0x03); // Put back in 8-bit mode
+  write4bits(0x03); // Put back into 8-bit mode
   delayMicroseconds(5000);
-  write4bits(0x08);
-  delayMicroseconds(5000);
+  if(_oled_ver == OLED_V2) {  // only run extra command for newer displays
+    write4bits(0x08);
+    delayMicroseconds(5000);
+  }
   write4bits(0x02); // Put into 4-bit mode
   delayMicroseconds(5000);
   write4bits(0x02);
