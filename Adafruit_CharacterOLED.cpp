@@ -2,6 +2,7 @@
 // With portions adapted from Elco Jacobs OLEDFourBit
 // Modified for 4-bit operation of the Winstar 16x2 Character OLED
 // By W. Earl for Adafruit - 6/30/12
+// Initialization sequence fixed by Technobly - 9/22/2013
 
 #include "Adafruit_CharacterOLED.h"
 
@@ -31,15 +32,19 @@
 // can't assume that its in that state when a sketch starts (and the
 // LiquidCrystal constructor is called).
 
-Adafruit_CharacterOLED::Adafruit_CharacterOLED(uint8_t rs, uint8_t rw, uint8_t enable,
+Adafruit_CharacterOLED::Adafruit_CharacterOLED(uint8_t ver, uint8_t rs, uint8_t rw, uint8_t enable,
 			     uint8_t d4, uint8_t d5, uint8_t d6, uint8_t d7)
 {
-  init(rs, rw, enable, d4, d5, d6, d7);
+  init(ver, rs, rw, enable, d4, d5, d6, d7);
 }
 
-void Adafruit_CharacterOLED::init(uint8_t rs, uint8_t rw, uint8_t enable,
+void Adafruit_CharacterOLED::init(uint8_t ver, uint8_t rs, uint8_t rw, uint8_t enable,
 			 uint8_t d4, uint8_t d5, uint8_t d6, uint8_t d7)
 {
+  _oled_ver = ver;
+  if(_oled_ver != OLED_V1 && _oled_ver != OLED_V2) {
+    _oled_ver = OLED_V2; // if error, default to newer version
+  }
   _rs_pin = rs;
   _rw_pin = rw;
   _enable_pin = enable;
@@ -81,21 +86,25 @@ void Adafruit_CharacterOLED::begin(uint8_t cols, uint8_t lines)
   }
 
   // Initialization sequence is not quite as documented by Winstar.
-  // Documented sequence only works on initial power-up.  An additional
-  // step is required to handle a warm-restart.
+  // Documented sequence only works on initial power-up.  
+  // An additional step of putting back into 8-bit mode first is 
+  // required to handle a warm-restart.
   //
   // In the data sheet, the timing specs are all zeros(!).  These have been tested to 
-  // reliably handle both warm & cold starts
-  //
+  // reliably handle both warm & cold starts.
 
-  write4bits(0x03);  // Missing step from doc. Thanks to Elco Jacobs
+  // 4-Bit initialization sequence from Technobly
+  write4bits(0x03); // Put back into 8-bit mode
   delayMicroseconds(5000);
-  write4bits(0x02);
+  if(_oled_ver == OLED_V2) {  // only run extra command for newer displays
+    write4bits(0x08);
+    delayMicroseconds(5000);
+  }
+  write4bits(0x02); // Put into 4-bit mode
   delayMicroseconds(5000);
   write4bits(0x02);
   delayMicroseconds(5000);
   write4bits(0x08);
-   
   delayMicroseconds(5000);
   
   command(0x08);	// Turn Off

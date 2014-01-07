@@ -35,12 +35,14 @@
 // include the library code:
 #include <Adafruit_CharacterOLED.h>
 
-// initialize the library with the numbers of the interface pins
-Adafruit_CharacterOLED lcd(6, 7, 8, 9, 10, 11, 12);
+// initialize the library with the OLED hardware 
+// version OLED_Vx and numbers of the interface pins. 
+// OLED_V1 = older, OLED_V2 = newer. If 2 doesn't work try 1 ;)
+Adafruit_CharacterOLED lcd(OLED_V2, 6, 7, 8, 9, 10, 11, 12);
 
 void setup() 
 {
-    // Print a message to the LCD.
+  // Print a message to the LCD.
   lcd.begin(16, 2);
   lcd.print("hello OLED World");
 }
@@ -52,5 +54,4 @@ void loop()
   lcd.setCursor(0, 1);
   // print the number of seconds since reset:
   lcd.print(millis()/1000);
- }
-
+}

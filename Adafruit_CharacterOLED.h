@@ -4,6 +4,10 @@
 #include <inttypes.h>
 #include "Print.h"
 
+// OLED hardware versions
+#define OLED_V1 0x01
+#define OLED_V2 0x02
+
 // commands
 #define LCD_CLEARDISPLAY 0x01
 #define LCD_RETURNHOME 0x02
@@ -45,10 +49,10 @@
 
 class Adafruit_CharacterOLED : public Print {
 public:
-  Adafruit_CharacterOLED(uint8_t rs, uint8_t rw, uint8_t enable,
+  Adafruit_CharacterOLED(uint8_t ver, uint8_t rs, uint8_t rw, uint8_t enable,
 		uint8_t d4, uint8_t d5, uint8_t d6, uint8_t d7);
   
-  void init(uint8_t rs, uint8_t rw, uint8_t enable,
+  void init(uint8_t ver, uint8_t rs, uint8_t rw, uint8_t enable,
 	    uint8_t d4, uint8_t d5, uint8_t d6, uint8_t d7);
     
   void begin(uint8_t cols, uint8_t rows);
@@ -80,6 +84,7 @@ private:
   void pulseEnable();
   void waitForReady();
 
+  uint8_t _oled_ver; // OLED_V1 = older, OLED_V2 = newer hardware version.
   uint8_t _rs_pin; // LOW: command.  HIGH: character.
   uint8_t _rw_pin; // LOW: write to LCD.  HIGH: read from LCD.
   uint8_t _enable_pin; // activated by a HIGH pulse.
