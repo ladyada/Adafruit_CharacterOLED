@@ -56,6 +56,7 @@ public:
 	    uint8_t d4, uint8_t d5, uint8_t d6, uint8_t d7);
     
   void begin(uint8_t cols, uint8_t rows);
+  void begin(uint8_t cols, uint8_t rows, uint8_t character_set);
 
   void clear();
   void home();

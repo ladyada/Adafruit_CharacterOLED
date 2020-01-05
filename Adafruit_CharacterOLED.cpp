@@ -65,6 +65,11 @@ void Adafruit_CharacterOLED::init(uint8_t ver, uint8_t rs, uint8_t rw, uint8_t e
 
 void Adafruit_CharacterOLED::begin(uint8_t cols, uint8_t lines) 
 {
+  begin(cols, lines, LCD_JAPANESE);
+}
+
+void Adafruit_CharacterOLED::begin(uint8_t cols, uint8_t lines, uint8_t character_set)
+{
   _numlines = lines;
   _currline = 0;
   
@@ -104,7 +109,7 @@ void Adafruit_CharacterOLED::begin(uint8_t cols, uint8_t lines)
   delayMicroseconds(5000);
   write4bits(0x02);
   delayMicroseconds(5000);
-  write4bits(0x08);
+  write4bits(0x08 | character_set);
   delayMicroseconds(5000);
   
   command(0x08);	// Turn Off
