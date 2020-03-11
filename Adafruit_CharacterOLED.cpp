@@ -63,12 +63,7 @@ void Adafruit_CharacterOLED::init(uint8_t ver, uint8_t rs, uint8_t rw, uint8_t e
   begin(16, 2);  
 }
 
-void Adafruit_CharacterOLED::begin(uint8_t cols, uint8_t lines) 
-{
-  begin(cols, lines, LCD_JAPANESE);
-}
-
-void Adafruit_CharacterOLED::begin(uint8_t cols, uint8_t lines, uint8_t character_set)
+void Adafruit_CharacterOLED::begin(uint8_t cols, uint8_t lines, uint8_t character_set = LCD_JAPANESE)
 {
   _numlines = lines;
   _currline = 0;
