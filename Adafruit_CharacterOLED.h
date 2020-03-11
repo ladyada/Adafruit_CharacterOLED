@@ -55,7 +55,7 @@ public:
   void init(uint8_t ver, uint8_t rs, uint8_t rw, uint8_t enable,
 	    uint8_t d4, uint8_t d5, uint8_t d6, uint8_t d7);
     
-  void begin(uint8_t cols, uint8_t rows);
+  void begin(uint8_t cols, uint8_t rows, uint8_t character_set = LCD_JAPANESE);
 
   void clear();
   void home();
